@@ -1,4 +1,4 @@
-package com.lingkarin.dev.chatapp.EventService;
+package com.lingkarin.dev.chatapp.eventservice;
 
 import java.net.URISyntaxException;
 

@@ -1,4 +1,4 @@
-package com.lingkarin.dev.chatapp.EventService;
+package com.lingkarin.dev.chatapp.eventservice;
 
 /**
  *  Ini adalah interface listener,

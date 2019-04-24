@@ -1,7 +1,7 @@
 package com.lingkarin.dev.chatapp.data.source;
 
-import com.lingkarin.dev.chatapp.EventService.XMPPEventListener;
-import com.lingkarin.dev.chatapp.EventService.XMPPEventService;
+import com.lingkarin.dev.chatapp.eventservice.XMPPEventListener;
+import com.lingkarin.dev.chatapp.eventservice.XMPPEventService;
 
 /**
  *  Merupakan interface yang digunakan untuk menghandle

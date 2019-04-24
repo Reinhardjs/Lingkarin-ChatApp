@@ -1,6 +1,6 @@
 package com.lingkarin.dev.chatapp.data.source;
 
-import com.lingkarin.dev.chatapp.EventService.XMPPEventListener;
+import com.lingkarin.dev.chatapp.eventservice.XMPPEventListener;
 
 import java.net.URISyntaxException;
 
