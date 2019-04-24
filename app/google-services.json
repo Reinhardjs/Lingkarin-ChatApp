@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "411152256683",
+    "firebase_url": "https://lingkaran-chat-app.firebaseio.com",
+    "project_id": "lingkaran-chat-app",
+    "storage_bucket": "lingkaran-chat-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411152256683:android:089ed3ea33dd8cf4",
+        "android_client_info": {
+          "package_name": "com.lingkarin.dev.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "411152256683-jqs3vs56v3adpqtk0v6jui3hm3r6cdts.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdjC_ZbOa2Hd-4rvf1D_cjZFW4IDlcb1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "411152256683-jqs3vs56v3adpqtk0v6jui3hm3r6cdts.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

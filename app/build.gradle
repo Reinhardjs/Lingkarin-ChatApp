@@ -1,0 +1,83 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.lingkarin.dev.chatapp"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "XMPP_DOMAIN", "\"xmpp-dev.lingkarin.com\""
+            buildConfigField "int", "XMPP_PORT", "5222"
+            buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
+            buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
+        }
+
+        debug {
+            buildConfigField "String", "XMPP_DOMAIN", "\"xmpp-dev.lingkarin.com\""
+            buildConfigField "int", "XMPP_PORT", "5222"
+            buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
+            buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // Support Libraries
+    implementation "com.android.support:support-core-utils:$supportLibraryVersion"
+    implementation "com.android.support:appcompat-v7:$supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
+    implementation "com.android.support:cardview-v7:$supportLibraryVersion"
+    implementation "com.android.support:customtabs:$supportLibraryVersion"
+    implementation "com.android.support:design:$supportLibraryVersion"
+    implementation "com.android.support:support-v4:$supportLibraryVersion"
+    implementation "com.android.support:support-media-compat:$supportLibraryVersion"
+    implementation "com.android.support:support-vector-drawable:$supportLibraryVersion"
+    implementation "com.android.support:animated-vector-drawable:$supportLibraryVersion"
+
+//    implementation "com.google.android.material:material:$material_version"
+
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
+
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.google.dagger:dagger-android:$daggerVersion"
+    implementation "com.jakewharton:butterknife:$butterKnifeVersion"
+
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    // Smack
+    implementation "org.igniterealtime.smack:smack-android-extensions:$smackVersion"
+    implementation "org.igniterealtime.smack:smack-tcp:$smackVersion"
+
+    // Image loaders
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    implementation "com.github.bumptech.glide:annotations:$glideVersion"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
+
+    // Architecture Components
+    implementation "android.arch.lifecycle:extensions:$archComponentVersion"
+    annotationProcessor "android.arch.lifecycle:compiler:$archComponentVersion"
+    implementation "android.arch.persistence.room:runtime:$archComponentVersion"
+    annotationProcessor "android.arch.persistence.room:compiler:$archComponentVersion"
+
+
+    implementation 'com.google.firebase:firebase-core:16.0.8'
+}
+
+apply plugin: 'com.google.gms.google-services'

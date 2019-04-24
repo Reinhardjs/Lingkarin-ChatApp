@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ChatApp</string>
+    <string name="button_open_chatlist">Chat List</string>
+</resources>

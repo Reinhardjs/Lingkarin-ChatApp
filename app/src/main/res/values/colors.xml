@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryColor">#fafafa</color>
+    <color name="primaryLightColor">#ffffff</color>
+    <color name="primaryDarkColor">#c7c7c7</color>
+    <color name="secondaryColor">#0b6696</color>
+    <color name="secondaryLightColor">#5094c7</color>
+    <color name="secondaryDarkColor">#003c68</color>
+    <color name="primaryTextColor">#000000</color>
+    <color name="secondaryTextColor">#ffffff</color>
+    <color name="ic_launcher_background">#0B6696</color>
+    <color name="white_translucent">#92ffffff</color>
+</resources>

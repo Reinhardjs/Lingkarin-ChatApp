@@ -1,0 +1,25 @@
+<resources>
+
+    <!-- Start of Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorAccent">@color/secondaryColor</item>
+        <item name="colorPrimaryDark">@color/secondaryDarkColor</item>
+        <item name="android:textColorPrimary">@color/primaryTextColor</item>
+        <item name="android:textColorPrimaryInverse">@color/secondaryTextColor</item>
+        <item name="android:textColorSecondary">@color/primaryTextColor</item>
+        <item name="android:textColorSecondaryInverse">@color/secondaryTextColor</item>
+        <item name="android:statusBarColor">@color/secondaryDarkColor</item>
+        <item name="android:navigationBarColor">@color/secondaryDarkColor</item>
+        <item name="android:colorBackground">@color/primaryColor</item>
+        <item name="android:colorForeground">@color/secondaryColor</item>
+        <item name="android:windowBackground">@color/primaryColor</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <!-- End of Base application theme. -->
+
+</resources>
