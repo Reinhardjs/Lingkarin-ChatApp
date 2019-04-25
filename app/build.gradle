@@ -16,14 +16,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
             buildConfigField "String", "XMPP_DOMAIN", "\"\""
-            buildConfigField "int", "XMPP_PORT", ""
+            buildConfigField "int", "XMPP_PORT", "0000"
             buildConfigField "String", "XMPP_RESOURCE", "\"\""
             buildConfigField "String", "GROUP_ID", "\"\""
         }
 
         debug {
             buildConfigField "String", "XMPP_DOMAIN", "\"\""
-            buildConfigField "int", "XMPP_PORT", ""
+            buildConfigField "int", "XMPP_PORT", "0000"
             buildConfigField "String", "XMPP_RESOURCE", "\"\""
             buildConfigField "String", "GROUP_ID", "\"\""
         }
@@ -55,10 +55,12 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
 
+    // Dagger & ButterKnife
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.dagger:dagger-android:$daggerVersion"
     implementation "com.jakewharton:butterknife:$butterKnifeVersion"
 
+    // Gson
     implementation 'com.google.code.gson:gson:2.8.5'
 
     // Smack
@@ -76,8 +78,13 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:$archComponentVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$archComponentVersion"
 
-
+    // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.8'
+
+    // Rx java & Reactive Network
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
+    implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'

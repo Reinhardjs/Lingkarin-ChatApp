@@ -4,6 +4,7 @@
     package="com.lingkarin.dev.chatapp">
 
     <application
+        android:name=".mvp.ChatApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -24,7 +25,12 @@
             android:exported="false" />
 
         <activity android:name=".mvp.chatlist.ChatListActivity" />
-        <activity android:name=".mvp.chat.ChatActivity"></activity>
+        <activity android:name=".mvp.chat.ChatActivity" />
+
+        <service
+            android:name=".xmpp.XMPPManagementService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
