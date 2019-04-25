@@ -1,24 +1,37 @@
 package com.lingkarin.dev.chatapp.data.models;
 
-public class User {
-    String username;
-    String password;
-    String jid;
+import com.stfalcon.chatkit.commons.models.IUser;
 
-    public User(String username, String password){
-        this.username = username;
-        this.password = password;
+public class User implements IUser {
+
+    private String id;
+    private String name;
+    private String avatar;
+    private boolean online;
+
+    public User(String id, String name, String avatar, boolean online) {
+        this.id = id;
+        this.name = name;
+        this.avatar = avatar;
+        this.online = online;
     }
 
-    public String getUsername() {
-        return username;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public String getPassword() {
-        return password;
+    @Override
+    public String getName() {
+        return name;
     }
 
-    public String getJid() {
-        return jid;
+    @Override
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public boolean isOnline() {
+        return online;
     }
 }
