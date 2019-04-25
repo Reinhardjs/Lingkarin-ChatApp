@@ -4,7 +4,7 @@
     package="com.lingkarin.dev.chatapp">
 
     <application
-        android:name=".mvp.ChatApplication"
+        android:name=".ChatApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

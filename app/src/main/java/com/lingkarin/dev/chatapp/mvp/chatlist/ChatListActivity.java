@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.lingkarin.dev.chatapp.R;
-import com.lingkarin.dev.chatapp.mvp.ChatApplication;
+import com.lingkarin.dev.chatapp.ChatApplication;
 
 import javax.inject.Inject;
 

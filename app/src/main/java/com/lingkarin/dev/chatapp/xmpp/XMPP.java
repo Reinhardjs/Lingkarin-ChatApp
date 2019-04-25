@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
+import com.lingkarin.dev.chatapp.constants.Config;
+
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
@@ -17,9 +19,12 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.iqregister.AccountManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 import org.jxmpp.jid.DomainBareJid;
+import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.jid.parts.Domainpart;
 import org.jxmpp.jid.parts.Localpart;
+import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.io.File;
@@ -28,7 +33,6 @@ import java.util.Collection;
 
 public class XMPP {
 
-    public static String HOST1 = "192.168.0.233";
     public static String HOST = "192.168.0.233";
 
 
@@ -44,10 +48,10 @@ public class XMPP {
                 XMPPTCPConnectionConfiguration.builder();
 
 
-        builder.setHost(HOST1);
-        builder.setPort(PORT);
+        builder.setHost(Config.XMPP_DOMAIN);
+        builder.setPort(Config.XMPP_PORT);
+        builder.setResource(Resourcepart.fromOrNull(Config.XMPP_RESOURCE));
         builder.setCompressionEnabled(false);
-//        builder.setDebuggerEnabled(true);
         builder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
         builder.setSendPresence(true);
         if (Build.VERSION.SDK_INT >= 14) {
@@ -63,9 +67,8 @@ public class XMPP {
             }
             builder.setKeystorePath(str);
         }
-        DomainBareJid serviceName = JidCreate.domainBareFrom(HOST);
+        DomainBareJid serviceName = JidCreate.domainBareFrom(Config.XMPP_DOMAIN);
         builder.setServiceName(serviceName);
-
 
         return builder.build();
     }
@@ -85,13 +88,13 @@ public class XMPP {
             this.connection = new XMPPTCPConnection(config);
         }
         this.connection.connect();
-//        Roster roster = Roster.getInstanceFor(connection);
-
-//        if (!roster.isLoaded())
-//            roster.reloadAndWait();
-//        Log.i(TAG, "Connection Properties: " + connection.getHost() + " " + connection.getSer.getServiceName());
-        Log.i(TAG, "Time taken in first time connect: " + (System.currentTimeMillis() - l));
         Roster roster = Roster.getInstanceFor(connection);
+
+        if (!roster.isLoaded())
+            roster.reloadAndWait();
+
+        Log.i(TAG, "Time taken in first time connect: " + (System.currentTimeMillis() - l));
+        roster = Roster.getInstanceFor(connection);
 
         roster.addRosterListener(new RosterListener() {
             @Override

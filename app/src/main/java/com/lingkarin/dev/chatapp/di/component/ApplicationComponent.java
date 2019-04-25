@@ -2,7 +2,7 @@ package com.lingkarin.dev.chatapp.di.component;
 
 import com.lingkarin.dev.chatapp.di.module.ApplicationModule;
 import com.lingkarin.dev.chatapp.di.module.AuthModule;
-import com.lingkarin.dev.chatapp.mvp.ChatApplication;
+import com.lingkarin.dev.chatapp.ChatApplication;
 import com.lingkarin.dev.chatapp.mvp.chatlist.ChatListActivity;
 
 import javax.inject.Singleton;

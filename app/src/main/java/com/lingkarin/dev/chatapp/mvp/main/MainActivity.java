@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.lingkarin.dev.chatapp.R;
 import com.lingkarin.dev.chatapp.data.Credential;
-import com.lingkarin.dev.chatapp.mvp.ChatApplication;
+import com.lingkarin.dev.chatapp.ChatApplication;
 import com.lingkarin.dev.chatapp.mvp.chatlist.ChatListActivity;
 
 import butterknife.BindView;

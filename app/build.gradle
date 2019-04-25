@@ -15,17 +15,17 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            buildConfigField "String", "XMPP_DOMAIN", "\"\""
-            buildConfigField "int", "XMPP_PORT", "0000"
-            buildConfigField "String", "XMPP_RESOURCE", "\"\""
-            buildConfigField "String", "GROUP_ID", "\"\""
+            buildConfigField "String", "XMPP_DOMAIN", "\"xmpp-dev.lingkarin.com\""
+            buildConfigField "int", "XMPP_PORT", "5222"
+            buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
+            buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
         }
 
         debug {
-            buildConfigField "String", "XMPP_DOMAIN", "\"\""
-            buildConfigField "int", "XMPP_PORT", "0000"
-            buildConfigField "String", "XMPP_RESOURCE", "\"\""
-            buildConfigField "String", "GROUP_ID", "\"\""
+            buildConfigField "String", "XMPP_DOMAIN", "\"xmpp-dev.lingkarin.com\""
+            buildConfigField "int", "XMPP_PORT", "5222"
+            buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
+            buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
         }
     }
 }
@@ -85,6 +85,9 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.7'
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'
+
+    // Life Cycle Observer
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
