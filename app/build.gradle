@@ -77,6 +77,7 @@ dependencies {
     // Smack
     implementation "org.igniterealtime.smack:smack-android-extensions:$smackVersion"
     implementation "org.igniterealtime.smack:smack-tcp:$smackVersion"
+    implementation 'de.measite.minidns:minidns-hla:0.2.4'//added this for fast connect
 
     // Image loaders
     implementation "com.github.bumptech.glide:glide:$glideVersion"

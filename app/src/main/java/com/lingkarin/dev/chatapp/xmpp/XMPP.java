@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.lingkarin.dev.chatapp.constants.Config;
 
@@ -16,6 +17,7 @@ import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smack.util.TLSUtils;
 import org.jivesoftware.smackx.iqregister.AccountManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 import org.jxmpp.jid.DomainBareJid;
@@ -31,6 +33,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+
 public class XMPP {
 
     public static String HOST = "192.168.0.233";
@@ -43,34 +48,72 @@ public class XMPP {
     private XMPPTCPConnection connection;
     private static String TAG = "SAMPLE-XMPP";
 
+    private static String username = "admin";
+    private static String password = "P@ssw0rd$ad1z";
+
     private XMPPTCPConnectionConfiguration buildConfiguration() throws XmppStringprepException {
         XMPPTCPConnectionConfiguration.Builder builder =
                 XMPPTCPConnectionConfiguration.builder();
 
-
+        builder.setUsernameAndPassword(username, password);
+        builder.setAuthzid(getEntityBareJid());
+        builder.setXmppDomain(Config.XMPP_DOMAIN);
         builder.setHost(Config.XMPP_DOMAIN);
         builder.setPort(Config.XMPP_PORT);
         builder.setResource(Resourcepart.fromOrNull(Config.XMPP_RESOURCE));
-        builder.setCompressionEnabled(false);
-        builder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+        builder.setCompressionEnabled(true);
+        builder.setSecurityMode(ConnectionConfiguration.SecurityMode.required);
+        builder.setKeystoreType("AndroidCAStore");
+        builder.setKeystorePath(null);
         builder.setSendPresence(true);
-        if (Build.VERSION.SDK_INT >= 14) {
-            builder.setKeystoreType("AndroidCAStore");
-            // config.setTruststorePassword(null);
-            builder.setKeystorePath(null);
-        } else {
-            builder.setKeystoreType("BKS");
-            String str = System.getProperty("javax.net.ssl.trustStore");
-            if (str == null) {
-                str = System.getProperty("java.home") + File.separator + "etc" + File.separator + "security"
-                        + File.separator + "cacerts.bks";
-            }
-            builder.setKeystorePath(str);
+        try {
+            SSLContext ssl = SSLContext.getInstance("TLS");
+            ssl.init(null, new TrustManager[]{new TLSUtils.AcceptAllTrustManager()}, null);
+            ssl.getServerSessionContext().setSessionTimeout(10 * 1000);
+            builder.setCustomSSLContext(ssl);
+        } catch (Exception e) {
+            Log.e(TAG, "getConnectionConfig:" + "setCustomSSLContext", e);
         }
-        DomainBareJid serviceName = JidCreate.domainBareFrom(Config.XMPP_DOMAIN);
-        builder.setServiceName(serviceName);
 
         return builder.build();
+    }
+
+    private EntityBareJid getEntityBareJid() {
+        return JidCreate.entityBareFrom(
+                Localpart.fromOrNull(username),
+                Domainpart.fromOrNull(Config.XMPP_DOMAIN)
+        );
+    }
+
+    public XMPPTCPConnection getConnection(Context context) {
+        Log.i(TAG, "Inside getConnection");
+        if ((this.connection == null) || (!this.connection.isConnected())) {
+            try {
+                this.connection = connect();
+//                this.connection.login(AppSettings.getUser(context),
+//                        AppSettings.getPassword(context));
+//                Log.i(TAG, "inside XMPP getConnection method after login");
+//                context.sendBroadcast(new Intent("liveapp.loggedin"));
+            } catch (XMPPException localXMPPException) {
+            } catch (SmackException e) {
+                Log.d("SAMPLE-XMPP", "ERROR 1 " + e.toString());
+                e.printStackTrace();
+            } catch (IOException e) {
+                Log.d("SAMPLE-XMPP", "ERROR 2 " + e.toString());
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                Log.d("SAMPLE-XMPP", "ERROR 3 " + e.toString());
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                Log.d("SAMPLE-XMPP", "ERROR 4 " + e.toString());
+                e.printStackTrace();
+            } catch (Exception e) {
+                Log.d("SAMPLE-XMPP", "ERROR" + e.toString());
+                e.printStackTrace();
+            }
+        }
+        Log.i(TAG, "Inside getConnection - Returning connection");
+        return connection;
     }
 
     private XMPPTCPConnection connect() throws XMPPException, SmackException, IOException, InterruptedException {
@@ -87,36 +130,41 @@ public class XMPP {
         if (connection == null) {
             this.connection = new XMPPTCPConnection(config);
         }
-        this.connection.connect();
-        Roster roster = Roster.getInstanceFor(connection);
 
-        if (!roster.isLoaded())
-            roster.reloadAndWait();
+        if (!connection.isConnected()){
+            this.connection.connect();
+        }
+//        Roster roster = Roster.getInstanceFor(connection);
+//
+//        if (!roster.isLoaded())
+//            roster.reloadAndWait();
+//
+//        Log.i(TAG, "Time taken in first time connect: " + (System.currentTimeMillis() - l));
+//        roster = Roster.getInstanceFor(connection);
+//
+//        roster.addRosterListener(new RosterListener() {
+//            @Override
+//            public void entriesAdded(Collection<Jid> addresses) {
+//                Log.d("deb", "ug");
+//            }
+//
+//            @Override
+//            public void entriesUpdated(Collection<Jid> addresses) {
+//                Log.d("deb", "ug");
+//            }
+//
+//            @Override
+//            public void entriesDeleted(Collection<Jid> addresses) {
+//                Log.d("deb", "ug");
+//            }
+//
+//            @Override
+//            public void presenceChanged(Presence presence) {
+//                Log.d("deb", "ug");
+//            }
+//        });
 
-        Log.i(TAG, "Time taken in first time connect: " + (System.currentTimeMillis() - l));
-        roster = Roster.getInstanceFor(connection);
-
-        roster.addRosterListener(new RosterListener() {
-            @Override
-            public void entriesAdded(Collection<Jid> addresses) {
-                Log.d("deb", "ug");
-            }
-
-            @Override
-            public void entriesUpdated(Collection<Jid> addresses) {
-                Log.d("deb", "ug");
-            }
-
-            @Override
-            public void entriesDeleted(Collection<Jid> addresses) {
-                Log.d("deb", "ug");
-            }
-
-            @Override
-            public void presenceChanged(Presence presence) {
-                Log.d("deb", "ug");
-            }
-        });
+        Log.d(TAG, "SUCCESS");
 
         return this.connection;
     }
@@ -134,32 +182,6 @@ public class XMPP {
             this.connection.disconnect();
         }
         instance = null;
-    }
-
-    public XMPPTCPConnection getConnection(Context context) {
-        Log.i(TAG, "Inside getConnection");
-        if ((this.connection == null) || (!this.connection.isConnected())) {
-            try {
-                this.connection = connect();
-//                this.connection.login(AppSettings.getUser(context),
-//                        AppSettings.getPassword(context));
-                Log.i(TAG, "inside XMPP getConnection method after login");
-                context.sendBroadcast(new Intent("liveapp.loggedin"));
-            } catch (XMPPException localXMPPException) {
-            } catch (SmackException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        Log.i(TAG, "Inside getConnection - Returning connection");
-        return connection;
     }
 
     public Roster getRoster() throws XMPPException {
@@ -234,9 +256,12 @@ public class XMPP {
             accountManager.createAccount(Localpart.from(user), pass);
         } catch (SmackException e) {
             e.printStackTrace();
+            Log.d(TAG, "ERROR 1 : " + e.toString());
         } catch (IOException e) {
             e.printStackTrace();
+            Log.d(TAG, "ERROR 2 : " + e.toString());
         } catch (InterruptedException e) {
+            Log.d(TAG, "ERROR 3 : " + e.toString());
             e.printStackTrace();
         }
         Log.i(TAG, "Time taken to register: " + (System.currentTimeMillis() - l));

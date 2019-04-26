@@ -97,6 +97,7 @@ public class XMPPConnectionManager implements ConnectionListener, ReconnectionLi
         builder.setSecurityMode(ConnectionConfiguration.SecurityMode.required);
         builder.setKeystoreType("AndroidCAStore");
         builder.setKeystorePath(null);
+
         try {
             SSLContext ssl = SSLContext.getInstance("TLS");
             ssl.init(null, new TrustManager[]{new TLSUtils.AcceptAllTrustManager()}, null);
@@ -136,6 +137,10 @@ public class XMPPConnectionManager implements ConnectionListener, ReconnectionLi
 
     public void connect() throws SmackException, XMPPException, IOException, InterruptedException {
         if (!mConnection.isConnected()) mConnection.connect();
+    }
+
+    public boolean isConnected(){
+        return mConnection.isConnected();
     }
 
     public void disconnect() {
