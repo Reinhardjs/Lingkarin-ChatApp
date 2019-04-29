@@ -77,11 +77,6 @@ public class XMPPConnectionManager implements ConnectionListener, ReconnectionLi
     }
 
     @Override
-    public void reconnectionSuccessful() {
-
-    }
-
-    @Override
     public void reconnectingIn(int seconds) {
         Log.d(TAG, "ReconnectionListener:" + "reconnectingIn " + seconds);
     }

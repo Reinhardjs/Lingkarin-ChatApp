@@ -132,6 +132,8 @@ public class XMPP {
 
         this.connection.setUseStreamManagement(false);
 
+
+
         if (!connection.isConnected()){
             this.connection.connect();
         }

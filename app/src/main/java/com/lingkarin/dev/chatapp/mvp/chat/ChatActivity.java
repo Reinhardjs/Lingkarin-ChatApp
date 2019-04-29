@@ -16,6 +16,7 @@ import com.lingkarin.dev.chatapp.R;
 import com.lingkarin.dev.chatapp.data.models.Message;
 import com.lingkarin.dev.chatapp.data.models.User;
 import com.lingkarin.dev.chatapp.services.MyService;
+import com.lingkarin.dev.chatapp.xmpp.XMPP;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
@@ -25,6 +26,8 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jivesoftware.smackx.receipts.DeliveryReceiptManager;
+import org.jivesoftware.smackx.receipts.ReceiptReceivedListener;
 
 import java.util.Date;
 

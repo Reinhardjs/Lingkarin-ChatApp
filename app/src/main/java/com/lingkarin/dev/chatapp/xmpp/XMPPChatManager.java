@@ -90,12 +90,7 @@ public class XMPPChatManager implements IncomingChatMessageListener, OutgoingCha
     }
 
     @Override
-    public void stateChanged(org.jivesoftware.smack.chat.Chat chat, ChatState state, Message message) {
-
-    }
-
-    @Override
-    public void processMessage(org.jivesoftware.smack.chat.Chat chat, Message message) {
+    public void stateChanged(Chat chat, ChatState state, Message message) {
 
     }
 }

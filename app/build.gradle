@@ -22,14 +22,14 @@ android {
 //            buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
 //            buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
 
-            buildConfigField "String", "XMPP_DOMAIN", "\"192.168.0.108\""
+            buildConfigField "String", "XMPP_DOMAIN", "\"192.168.0.102\""
             buildConfigField "int", "XMPP_PORT", "5222"
             buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
             buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
         }
 
         debug {
-            buildConfigField "String", "XMPP_DOMAIN", "\"192.168.0.108\""
+            buildConfigField "String", "XMPP_DOMAIN", "\"192.168.0.102\""
             buildConfigField "int", "XMPP_PORT", "5222"
             buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
             buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
@@ -84,13 +84,13 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
 
     // Smack
-//    implementation "org.igniterealtime.smack:smack-android::4.2.2"
-//    implementation "org.igniterealtime.smack:smack-android-extensions:$smackVersion"
-//    implementation "org.igniterealtime.smack:smack-tcp:$smackVersion"
+    implementation "org.igniterealtime.smack:smack-android:$smackVersion"
+    implementation "org.igniterealtime.smack:smack-android-extensions:$smackVersion"
+    implementation "org.igniterealtime.smack:smack-tcp:$smackVersion"
     implementation 'de.measite.minidns:minidns-hla:0.2.4'//added this for fast connect
-    implementation "org.igniterealtime.smack:smack-android:4.2.2"
-    implementation "org.igniterealtime.smack:smack-tcp:4.2.2"
-    implementation "org.igniterealtime.smack:smack-extensions:4.2.2"
+//    implementation "org.igniterealtime.smack:smack-android:4.2.2"
+//    implementation "org.igniterealtime.smack:smack-tcp:4.2.2"
+//    implementation "org.igniterealtime.smack:smack-extensions:4.2.2"
 
     // Image loaders
     implementation "com.github.bumptech.glide:glide:$glideVersion"
@@ -128,6 +128,10 @@ dependencies {
 //    implementation "de.hdodenhof:circleimageview:$circleImageViewVersion"
 //    implementation "com.github.siyamed:android-shape-imageview:$shapeImageViewVersion"
 
+}
+
+configurations {
+    all*.exclude group: 'xpp3', module: 'xpp3'
 }
 
 apply plugin: 'com.google.gms.google-services'

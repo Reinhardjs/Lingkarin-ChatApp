@@ -25,14 +25,19 @@ import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
 import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smackx.chatstates.ChatState;
 import org.jivesoftware.smackx.chatstates.packet.ChatStateExtension;
+import org.jivesoftware.smackx.receipts.DeliveryReceipt;
+import org.jivesoftware.smackx.receipts.DeliveryReceiptManager;
+import org.jivesoftware.smackx.receipts.DeliveryReceiptRequest;
+import org.jivesoftware.smackx.receipts.ReceiptReceivedListener;
 import org.jxmpp.jid.EntityBareJid;
+import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
-//import org.minidns.dnsserverlookup.android21.AndroidUsingLinkProperties;
-//import org.minidns.dnsserverlookup.android21.AndroidUsingLinkProperties;
+import org.minidns.dnsserverlookup.android21.AndroidUsingLinkProperties;
 
 import java.util.Objects;
 import java.util.Timer;
@@ -190,7 +195,6 @@ public class MyService extends Service {
                     }
                 }
 
-
                 if (!message.getBody().isEmpty()){
                     String contactJid="";
                     if ( from.contains("/"))
@@ -212,6 +216,18 @@ public class MyService extends Service {
                     intent.putExtra(MyService.BUNDLE_MESSAGE_BODY,message.getBody());
 
                     EventBus.getDefault().post(intent);
+
+//                    DeliveryReceiptManager deliveryReceiptManager = DeliveryReceiptManager.getInstanceFor(XMPP.getInstance().connection);
+                    if(DeliveryReceiptManager.hasDeliveryReceiptRequest(message)) {
+                        Stanza received = new Message();
+                        received.addExtension(new DeliveryReceipt(message.getStanzaId()));
+                        received.setTo(message.getFrom());
+                        try {
+                            XMPP.getInstance().connection.sendStanza(received);
+                        } catch(Exception ex) {
+                            Log.d("MYSERVICE", "RECEIPT ERRRORRR : " + ex.toString());
+                        }
+                    }
                 }
 
 
@@ -235,11 +251,20 @@ public class MyService extends Service {
 
             Message message = new Message(jid, Message.Type.chat);
             message.setBody(body);
-
+            DeliveryReceiptRequest.addTo(message);
 
             chat.send(message);
 
             Log.d("MYSERVICE","Sending message succes :"+ jid.getLocalpart());
+
+
+//            Message msg = new Message(jid, Message.Type.chat);
+//            msg.setBody(body);
+//            msg.setStanzaId("ini-id-1");
+//            msg.setFrom(JidCreate.from("chat1@"+ Config.XMPP_DOMAIN));
+//            DeliveryReceiptRequest.addTo(msg);
+//            XMPP.getInstance().connection.sendStanza(msg);
+
 
         } catch (XmppStringprepException e){
             e.printStackTrace();
@@ -271,7 +296,7 @@ public class MyService extends Service {
             message.addExtension(ext);
             message.setBody("");
 
-//            AndroidUsingLinkProperties.setup(getApplicationContext());
+            AndroidUsingLinkProperties.setup(getApplicationContext());
             chat.send(message);
 
             Log.d("MYSERVICE","Sending message succes :"+ jid.getLocalpart());
@@ -306,7 +331,7 @@ public class MyService extends Service {
             message.addExtension(ext);
             message.setBody("");
 
-//            AndroidUsingLinkProperties.setup(getApplicationContext());
+            AndroidUsingLinkProperties.setup(getApplicationContext());
             chat.send(message);
 
             Log.d("MYSERVICE","Sending message succes :"+ jid.getLocalpart());
@@ -331,7 +356,7 @@ public class MyService extends Service {
         String password = intent.getStringExtra("password");
         String chatTo = intent.getStringExtra("chatTo");
 
-//        AndroidUsingLinkProperties.setup(getApplicationContext());
+        AndroidUsingLinkProperties.setup(getApplicationContext());
 
         XMPP xmppInstance = XMPP.getInstance();
         xmppInstance.setAccount(username, password);
@@ -361,6 +386,25 @@ public class MyService extends Service {
         Log.d("MYSERVICE", "connect and login completed");
         setupMUCListener();
         setupMessageListener();
+
+
+
+        DeliveryReceiptManager mDeliveryReceiptManager = DeliveryReceiptManager.getInstanceFor(XMPP.getInstance().connection);
+//        mDeliveryReceiptManager.setAutoReceiptMode(DeliveryReceiptManager.AutoReceiptMode.always);
+        mDeliveryReceiptManager.autoAddDeliveryReceiptRequests();
+        mDeliveryReceiptManager.addReceiptReceivedListener(new ReceiptReceivedListener()
+        {
+            @Override
+            public void onReceiptReceived(Jid fromJid, Jid toJid, String receiptId, Stanza receipt) {
+                Log.d("MYSERVICE", "ReceiptReceivedListener(newOutgoingMessage): from:" + fromJid
+                        + ", to:" + toJid + ", receiptId:" + receiptId + ", stanza:" + receipt.toString());
+                Log.d("MYSERVICE", "FROM : " + fromJid);
+                Log.d("MYSERVICE", "to : " + toJid);
+                Log.d("MYSERVICE", "receipt id : " + receiptId);
+                Log.d("MYSERVICE", "Stanza id : " + receipt.getStanzaId());
+            }
+        });
+
 
 
     }
