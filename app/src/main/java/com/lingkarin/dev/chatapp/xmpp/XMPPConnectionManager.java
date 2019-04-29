@@ -19,6 +19,7 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Domainpart;
 import org.jxmpp.jid.parts.Localpart;
 import org.jxmpp.jid.parts.Resourcepart;
+import org.jxmpp.stringprep.XmppStringprepException;
 
 import java.io.IOException;
 
@@ -35,7 +36,7 @@ public class XMPPConnectionManager implements ConnectionListener, ReconnectionLi
     private ReconnectionManager mReconnectionManager;
 
     @NonNull
-    public static XMPPConnectionManager getInstance(@NonNull XMPPAccount xmppAccount) {
+    public static XMPPConnectionManager getInstance(@NonNull XMPPAccount xmppAccount) throws XmppStringprepException {
         if (mXMPPConnectionManager == null) {
             mXMPPConnectionManager = new XMPPConnectionManager(xmppAccount);
         }
@@ -43,7 +44,7 @@ public class XMPPConnectionManager implements ConnectionListener, ReconnectionLi
         return mXMPPConnectionManager;
     }
 
-    private XMPPConnectionManager(XMPPAccount xmppAccount) {
+    private XMPPConnectionManager(XMPPAccount xmppAccount) throws XmppStringprepException {
         mXMPPAccount = xmppAccount;
         init();
     }
@@ -76,6 +77,11 @@ public class XMPPConnectionManager implements ConnectionListener, ReconnectionLi
     }
 
     @Override
+    public void reconnectionSuccessful() {
+
+    }
+
+    @Override
     public void reconnectingIn(int seconds) {
         Log.d(TAG, "ReconnectionListener:" + "reconnectingIn " + seconds);
     }
@@ -85,14 +91,14 @@ public class XMPPConnectionManager implements ConnectionListener, ReconnectionLi
         Log.e(TAG, "ReconnectionListener:" + "reconnectionFailed", e);
     }
 
-    private XMPPTCPConnectionConfiguration getConnectionConfig() {
+    private XMPPTCPConnectionConfiguration getConnectionConfig() throws XmppStringprepException {
         XMPPTCPConnectionConfiguration.Builder builder = XMPPTCPConnectionConfiguration.builder();
         builder.setUsernameAndPassword(mXMPPAccount.getUsername(), mXMPPAccount.getPassword());
         builder.setAuthzid(getEntityBareJid());
         builder.setXmppDomain(getEntityBareJid().asDomainBareJid());
         builder.setHost(mXMPPAccount.getHost());
         builder.setPort(mXMPPAccount.getPort());
-        builder.setResource(Resourcepart.fromOrNull(mXMPPAccount.getResource()));
+        builder.setResource(Resourcepart.from(mXMPPAccount.getResource()));
         builder.setCompressionEnabled(true);
         builder.setSecurityMode(ConnectionConfiguration.SecurityMode.required);
         builder.setKeystoreType("AndroidCAStore");
@@ -110,14 +116,14 @@ public class XMPPConnectionManager implements ConnectionListener, ReconnectionLi
         return builder.build();
     }
 
-    private EntityBareJid getEntityBareJid() {
+    private EntityBareJid getEntityBareJid() throws XmppStringprepException {
         return JidCreate.entityBareFrom(
-                Localpart.fromOrNull(mXMPPAccount.getUsername()),
-                Domainpart.fromOrNull(mXMPPAccount.getDomain())
+                Localpart.from(mXMPPAccount.getUsername()),
+                Domainpart.from(mXMPPAccount.getDomain())
         );
     }
 
-    private void init() {
+    private void init() throws XmppStringprepException {
         if (mConnection != null) return;
         mConnection = new XMPPTCPConnection(getConnectionConfig());
         mReconnectionManager = ReconnectionManager.getInstanceFor(mConnection);

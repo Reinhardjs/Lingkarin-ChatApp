@@ -2,5 +2,7 @@
 <resources>
 
     <dimen name="margin_15dp">15dp</dimen>
+    <dimen name="toolbar_title_size">18sp</dimen>
+    <dimen name="toolbar_subtitle_size">14sp</dimen>
 
 </resources>

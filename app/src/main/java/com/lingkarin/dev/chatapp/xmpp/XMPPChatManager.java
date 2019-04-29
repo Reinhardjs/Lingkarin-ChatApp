@@ -61,11 +61,11 @@ public class XMPPChatManager implements IncomingChatMessageListener, OutgoingCha
                 + ", to:" + toJid + ", receiptId:" + receiptId + ", stanza:" + receipt.toString());
     }
 
-    @Override
-    public void stateChanged(Chat chat, ChatState state, Message message) {
-        Log.d(TAG, "ChatStateListener(stateChanged): state:" + state.toString()
-                + ", message:" + message.toString());
-    }
+//    @Override
+//    public void stateChanged(Chat chat, ChatState state, Message message) {
+//        Log.d(TAG, "ChatStateListener(stateChanged): state:" + state.toString()
+//                + ", message:" + message.toString());
+//    }
 
     private void init() {
         mChatManager = ChatManager.getInstanceFor(mConnection);
@@ -79,13 +79,23 @@ public class XMPPChatManager implements IncomingChatMessageListener, OutgoingCha
         mChatManager.addIncomingListener(this);
         mChatManager.addOutgoingListener(this);
         mDeliveryReceiptManager.addReceiptReceivedListener(this);
-        mChatStateManager.addChatStateListener(this);
+//        mChatStateManager.addChatStateListener(this);
     }
 
     public void removeListener() {
-        mChatManager.removeIncomingListener(this);
-        mChatManager.removeOutgoingListener(this);
+//        mChatManager.removeIncomingListener(this);
+//        mChatManager.removeOutgoingListener(this);
         mDeliveryReceiptManager.removeReceiptReceivedListener(this);
-        mChatStateManager.removeChatStateListener(this);
+//        mChatStateManager.removeChatStateListener(this);
+    }
+
+    @Override
+    public void stateChanged(org.jivesoftware.smack.chat.Chat chat, ChatState state, Message message) {
+
+    }
+
+    @Override
+    public void processMessage(org.jivesoftware.smack.chat.Chat chat, Message message) {
+
     }
 }

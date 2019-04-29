@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.lingkarin.dev.chatapp">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.NETWORK" />
+
     <application
         android:name=".ChatApplication"
         android:allowBackup="true"
@@ -25,12 +30,31 @@
             android:exported="false" />
 
         <activity android:name=".mvp.chatlist.ChatListActivity" />
-        <activity android:name=".mvp.chat.ChatActivity" />
+        <activity
+            android:name=".mvp.chat.ChatActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".xmpp.XMPPManagementService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+        <service
+            android:name=".services.MyService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name=".services.receiver.BootReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".mvp.groupchat.GroupCreateActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

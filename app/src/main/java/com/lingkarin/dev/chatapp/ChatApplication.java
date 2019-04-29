@@ -2,12 +2,14 @@ package com.lingkarin.dev.chatapp;
 
 import android.app.Application;
 import android.arch.lifecycle.ProcessLifecycleOwner;
+import android.content.Intent;
 
 import com.lingkarin.dev.chatapp.di.component.ApplicationComponent;
 import com.lingkarin.dev.chatapp.di.component.AuthComponent;
 import com.lingkarin.dev.chatapp.di.component.DaggerApplicationComponent;
 import com.lingkarin.dev.chatapp.di.module.ApplicationModule;
 import com.lingkarin.dev.chatapp.di.module.AuthModule;
+import com.lingkarin.dev.chatapp.services.MyService;
 import com.lingkarin.dev.chatapp.util.AppLifeCycleObserver;
 
 public class ChatApplication extends Application {
@@ -18,6 +20,10 @@ public class ChatApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+
+        Intent myService = new Intent(this, MyService.class);
+        startService(myService);
 
 
         if (getApplicationComponent() == null) {

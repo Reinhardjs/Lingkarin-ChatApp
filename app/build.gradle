@@ -17,18 +17,27 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            buildConfigField "String", "XMPP_DOMAIN", "\"xmpp-dev.lingkarin.com\""
+//            buildConfigField "String", "XMPP_DOMAIN", "\"xmpp-dev.lingkarin.com\""
+//            buildConfigField "int", "XMPP_PORT", "5222"
+//            buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
+//            buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
+
+            buildConfigField "String", "XMPP_DOMAIN", "\"192.168.0.108\""
             buildConfigField "int", "XMPP_PORT", "5222"
             buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
             buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
         }
 
         debug {
-            buildConfigField "String", "XMPP_DOMAIN", "\"xmpp-dev.lingkarin.com\""
+            buildConfigField "String", "XMPP_DOMAIN", "\"192.168.0.108\""
             buildConfigField "int", "XMPP_PORT", "5222"
             buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
             buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
         }
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
     }
 }
 
@@ -75,9 +84,13 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
 
     // Smack
-    implementation "org.igniterealtime.smack:smack-android-extensions:$smackVersion"
-    implementation "org.igniterealtime.smack:smack-tcp:$smackVersion"
+//    implementation "org.igniterealtime.smack:smack-android::4.2.2"
+//    implementation "org.igniterealtime.smack:smack-android-extensions:$smackVersion"
+//    implementation "org.igniterealtime.smack:smack-tcp:$smackVersion"
     implementation 'de.measite.minidns:minidns-hla:0.2.4'//added this for fast connect
+    implementation "org.igniterealtime.smack:smack-android:4.2.2"
+    implementation "org.igniterealtime.smack:smack-tcp:4.2.2"
+    implementation "org.igniterealtime.smack:smack-extensions:4.2.2"
 
     // Image loaders
     implementation "com.github.bumptech.glide:glide:$glideVersion"
@@ -104,8 +117,12 @@ dependencies {
     // ChatKit
     implementation 'com.github.stfalcon:chatkit:0.3.3'
 
-    //Picasso
+    // Picasso
     implementation "com.squareup.picasso:picasso:$picassoVersion"
+
+    // EventBus
+    implementation 'org.greenrobot:eventbus:3.1.1'
+
 //
 //    //ImageViews
 //    implementation "de.hdodenhof:circleimageview:$circleImageViewVersion"

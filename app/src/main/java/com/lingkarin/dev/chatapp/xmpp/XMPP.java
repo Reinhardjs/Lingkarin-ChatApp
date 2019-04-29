@@ -1,10 +1,7 @@
 package com.lingkarin.dev.chatapp.xmpp;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.lingkarin.dev.chatapp.constants.Config;
 
@@ -14,42 +11,32 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
-import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.jivesoftware.smack.util.TLSUtils;
 import org.jivesoftware.smackx.iqregister.AccountManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
-import org.jxmpp.jid.DomainBareJid;
 import org.jxmpp.jid.EntityBareJid;
-import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Domainpart;
 import org.jxmpp.jid.parts.Localpart;
 import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 
 public class XMPP {
 
-    public static String HOST = "192.168.0.233";
+    public static String HOST = Config.XMPP_DOMAIN;
+//    public static final String LIVESERVICE = "liveappgroup@liveapp." + HOST;
 
-
-    public static final String LIVESERVICE = "liveappgroup@liveapp." + HOST;
-
-    public static final int PORT = 5222;
+    public static final int PORT = Config.XMPP_PORT;
     private static XMPP instance;
-    private XMPPTCPConnection connection;
+    public XMPPTCPConnection connection;
     private static String TAG = "SAMPLE-XMPP";
 
     private static String username = "admin";
-    private static String password = "P@ssw0rd$ad1z";
+    // private static String password = "P@ssw0rd$ad1z";
+    private static String password = "password";
 
     private XMPPTCPConnectionConfiguration buildConfiguration() throws XmppStringprepException {
         XMPPTCPConnectionConfiguration.Builder builder =
@@ -60,29 +47,41 @@ public class XMPP {
         builder.setXmppDomain(Config.XMPP_DOMAIN);
         builder.setHost(Config.XMPP_DOMAIN);
         builder.setPort(Config.XMPP_PORT);
-        builder.setResource(Resourcepart.fromOrNull(Config.XMPP_RESOURCE));
+        builder.setResource(Resourcepart.from(Config.XMPP_RESOURCE));
         builder.setCompressionEnabled(true);
-        builder.setSecurityMode(ConnectionConfiguration.SecurityMode.required);
+        builder.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+//        builder.setSecurityMode(ConnectionConfiguration.SecurityMode.required);
         builder.setKeystoreType("AndroidCAStore");
         builder.setKeystorePath(null);
         builder.setSendPresence(true);
-        try {
-            SSLContext ssl = SSLContext.getInstance("TLS");
-            ssl.init(null, new TrustManager[]{new TLSUtils.AcceptAllTrustManager()}, null);
-            ssl.getServerSessionContext().setSessionTimeout(10 * 1000);
-            builder.setCustomSSLContext(ssl);
-        } catch (Exception e) {
-            Log.e(TAG, "getConnectionConfig:" + "setCustomSSLContext", e);
-        }
+//        try {
+//            SSLContext ssl = SSLContext.getInstance("TLS");
+//            ssl.init(null, new TrustManager[]{new TLSUtils.AcceptAllTrustManager()}, null);
+//            ssl.getServerSessionContext().setSessionTimeout(10 * 1000);
+//            builder.setCustomSSLContext(ssl);
+//        } catch (Exception e) {
+//            Log.e(TAG, "getConnectionConfig:" + "setCustomSSLContext", e);
+//        }
 
         return builder.build();
     }
 
     private EntityBareJid getEntityBareJid() {
-        return JidCreate.entityBareFrom(
-                Localpart.fromOrNull(username),
-                Domainpart.fromOrNull(Config.XMPP_DOMAIN)
-        );
+        try {
+            return JidCreate.entityBareFrom(
+                    Localpart.from(username),
+                    Domainpart.from(Config.XMPP_DOMAIN)
+            );
+        } catch (XmppStringprepException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void setAccount(String username, String password){
+        this.username = username;
+        this.password = password;
     }
 
     public XMPPTCPConnection getConnection(Context context) {
@@ -90,8 +89,8 @@ public class XMPP {
         if ((this.connection == null) || (!this.connection.isConnected())) {
             try {
                 this.connection = connect();
-//                this.connection.login(AppSettings.getUser(context),
-//                        AppSettings.getPassword(context));
+
+                //                this.connection.login(AppSettings.getUser(context), AppSettings.getPassword(context));
 //                Log.i(TAG, "inside XMPP getConnection method after login");
 //                context.sendBroadcast(new Intent("liveapp.loggedin"));
             } catch (XMPPException localXMPPException) {
@@ -130,6 +129,8 @@ public class XMPP {
         if (connection == null) {
             this.connection = new XMPPTCPConnection(config);
         }
+
+        this.connection.setUseStreamManagement(false);
 
         if (!connection.isConnected()){
             this.connection.connect();

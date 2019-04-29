@@ -22,6 +22,7 @@ public class XMPPMUC implements InvitationListener {
 
     @NonNull
     public static XMPPMUC getInstance(@NonNull AbstractXMPPConnection connection) {
+        
         if (mXMPPMUC == null) {
             mXMPPMUC = new XMPPMUC(connection);
         }
