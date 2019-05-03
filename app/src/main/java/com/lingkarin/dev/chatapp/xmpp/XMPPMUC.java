@@ -39,7 +39,7 @@ public class XMPPMUC implements InvitationListener {
     public void invitationReceived(XMPPConnection conn, MultiUserChat room, EntityJid from,
                                    String reason, String password, Message message,
                                    MUCUser.Invite invitation) {
-        Log.d(TAG,"InvitationListener(invitationReceived): from:" + from.asEntityBareJidString()
+        Log.d(TAG,"InvitationListener(invitationReceived): fromJid:" + from.asEntityBareJidString()
                 + ", room:" + room.getSubject() + ", reason:" + reason + ", password:" + password
                 + ", message:" + message.toString());
     }
@@ -53,7 +53,7 @@ public class XMPPMUC implements InvitationListener {
         mMultiUserChatManager.addInvitationListener(this);
     }
 
-    private void removeListener() {
+    public void removeListener() {
         mMultiUserChatManager.removeInvitationListener(this);
     }
 }

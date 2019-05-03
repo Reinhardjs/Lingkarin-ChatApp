@@ -63,7 +63,7 @@ public class XMPPConnectionManager implements ConnectionListener, ReconnectionLi
     public void authenticated(XMPPConnection connection, boolean resumed) {
         Log.d(TAG, "ConnectionListener:" + "authenticated");
         XMPPRosterManager.getInstance(mConnection);
-        XMPPChatManager.getInstance(mConnection);
+        XMPPChatHandler.getInstance(mConnection);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class XMPPConnectionManager implements ConnectionListener, ReconnectionLi
     }
 
     public void disconnect() {
-        XMPPChatManager.getInstance(mConnection).removeListener();
+        XMPPChatHandler.getInstance(mConnection).removeListener();
         XMPPRosterManager.getInstance(mConnection).removeListener();
         mConnection.disconnect();
         removeListener();

@@ -49,7 +49,7 @@ public class XMPPService extends Service {
 //        if (mDataRepository == null) {
 //            mDataRepository = DataRepository.getInstance(getApplication());
 //        }
-//        mDataRepository.getCurrentMemberId(new DataSource.GetCurrentMemberIdCallBack() {
+//        mDataRepository.getCurrentMemberId(new RemoteDataSource.GetCurrentMemberIdCallBack() {
 //            @Override
 //            public void onGetCurrentMemberIdSuccess(@NonNull String memberId) {
 //                Log.d(TAG, "getCurrentMemberId(success)");

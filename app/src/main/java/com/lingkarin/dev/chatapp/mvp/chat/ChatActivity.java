@@ -2,7 +2,6 @@ package com.lingkarin.dev.chatapp.mvp.chat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,15 +9,26 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lingkarin.dev.chatapp.ChatApplication;
 import com.lingkarin.dev.chatapp.R;
+import com.lingkarin.dev.chatapp.data.AppSettings;
+import com.lingkarin.dev.chatapp.data.models.DeliveryReceiptData;
 import com.lingkarin.dev.chatapp.data.models.Message;
 import com.lingkarin.dev.chatapp.data.models.User;
-import com.lingkarin.dev.chatapp.services.MyService;
-import com.lingkarin.dev.chatapp.xmpp.XMPP;
+import com.lingkarin.dev.chatapp.data.source.RemoteDataSource;
+import com.lingkarin.dev.chatapp.data.source.Repository;
+import com.lingkarin.dev.chatapp.data.source.persistence.ChatAppLocal;
+import com.lingkarin.dev.chatapp.mvp.chat.holders.CustomIncomingImageMessageViewHolder;
+import com.lingkarin.dev.chatapp.mvp.chat.holders.CustomIncomingTextMessageViewHolder;
+import com.lingkarin.dev.chatapp.mvp.chat.holders.CustomOutcomingImageMessageViewHolder;
+import com.lingkarin.dev.chatapp.mvp.chat.holders.CustomOutcomingTextMessageViewHolder;
+import com.lingkarin.dev.chatapp.services.service.MyService;
+import com.lingkarin.dev.chatapp.utils.Utils;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
+import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
@@ -26,12 +36,15 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jivesoftware.smackx.receipts.DeliveryReceiptManager;
-import org.jivesoftware.smackx.receipts.ReceiptReceivedListener;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
+
+import io.reactivex.disposables.CompositeDisposable;
 
 public class ChatActivity extends AppCompatActivity
         implements MessageInput.InputListener, MessageInput.AttachmentsListener, MessageInput.TypingListener,
@@ -45,14 +58,39 @@ public class ChatActivity extends AppCompatActivity
     private MessagesListAdapter messagesAdapter;
 
     private static final int TOTAL_MESSAGES_COUNT = 30;
-    protected final String myUsername = "0";
+
+
+    public static String myUsername = "0";
+    public static String chatToUsername;
+
+
     protected ImageLoader imageLoader;
 
     private int selectionCount;
     private Date lastLoadedDate;
-    private String chatToUsername;
 
     TextView toolbarTitle, toolbarSubtitle;
+    ChatAppLocal mLocalRepository;
+
+    private final CompositeDisposable mDisposable = new CompositeDisposable();
+    private static final String TAG = "MYSERVICE";
+    private Repository mRepository;
+
+    public HashMap<String, Message> messagesReferenceMap = new HashMap<>();
+
+    @Override
+    public void onStop(){
+        super.onStop();
+
+        mDisposable.clear();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
     @SuppressLint("CutPasteId")
     @Override
@@ -60,9 +98,16 @@ public class ChatActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        myUsername = AppSettings.getUserName(this);
+        mLocalRepository = ChatAppLocal.getInstance(getApplicationContext());
+        mRepository = Repository.getInstance(getApplicationContext());
 
+        init(getIntent());
+    }
 
+    private void init(Intent intent){
         ChatApplication.getApplicationComponent().inject(this);
+        chatToUsername = intent.getStringExtra("chatToUsername");
 
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
@@ -72,16 +117,13 @@ public class ChatActivity extends AppCompatActivity
         input.setTypingListener(this);
         input.setAttachmentsListener(this);
 
-
-        chatToUsername = getIntent().getStringExtra("chatToUsername");
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Remove default title text
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        // Get access to the custom title view
+        // Get access toJid the custom title view
         toolbarTitle = toolbar.findViewById(R.id.toolbar_title);
         toolbarSubtitle = toolbar.findViewById(R.id.toolbar_subtitle);
 
@@ -90,29 +132,16 @@ public class ChatActivity extends AppCompatActivity
         toolbarSubtitle.setVisibility(View.GONE);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-
-        EventBus.getDefault().unregister(this);
-    }
-
     @Subscribe(threadMode =  ThreadMode.MAIN)
     public void onReceiveNewMessageEvent(Intent intent){
         switch (intent.getAction()){
             case MyService.NEW_MESSAGE:
                 String from_jid = intent.getStringExtra(MyService.BUNDLE_FROM_JID);
                 String messageBody = intent.getStringExtra(MyService.BUNDLE_MESSAGE_BODY);
+                Message message = Utils.jsonToMessage(messageBody);
 
-                User user = new User(from_jid, from_jid, "http://i.imgur.com/Qn9UesZ.png", true);
-                Message message = new Message(myUsername, user, messageBody);
-
+                mLocalRepository.insertMessage(message);
+                messagesReferenceMap.put(message.getId(), message);
                 messagesAdapter.addToStart(message, true);
                 break;
             case MyService.RECEIVE_ON_START_TYPING:
@@ -120,6 +149,29 @@ public class ChatActivity extends AppCompatActivity
                 break;
             case MyService.RECEIVE_ON_STOP_TYPING:
                 toolbarSubtitle.setVisibility(View.GONE);
+
+                break;
+            case MyService.STATUS_DELIVERED:
+                DeliveryReceiptData data = (DeliveryReceiptData) intent.getSerializableExtra(DeliveryReceiptData.class.getSimpleName());
+                Toast.makeText(getApplicationContext(), "Delivered for " + data.getMessageId() + ", " + data.toString(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Delivered for msgid: " + data.getMessageId() + ",\n " +
+                        "FROM : " + data.fromJid  + ",\n " +
+                        "TO : " + data.toJid  + ",\n " +
+                        "STATUS : " + data.status  + ",\n ");
+
+                Objects.requireNonNull(messagesReferenceMap.get(data.getMessageId())).setStatus(Message.STATUS_DELIVERED);
+                messagesAdapter.notifyDataSetChanged();
+                break;
+            case MyService.STATUS_RECEIVED:
+                DeliveryReceiptData data2 = (DeliveryReceiptData) intent.getSerializableExtra(DeliveryReceiptData.class.getSimpleName());
+                Toast.makeText(getApplicationContext(), "Received for " + data2.getMessageId() + ", " + data2.toString(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Received for msgid: " + data2.getMessageId() + ",\n " +
+                        "FROM : " + data2.fromJid  + ",\n " +
+                        "TO : " + data2.toJid  + ",\n " +
+                        "STATUS : " + data2.status  + ",\n ");
+
+                Objects.requireNonNull(messagesReferenceMap.get(data2.getMessageId())).setStatus(Message.STATUS_RECEIVED);
+                messagesAdapter.notifyDataSetChanged();
                 break;
         }
     }
@@ -142,17 +194,56 @@ public class ChatActivity extends AppCompatActivity
             }
         };
 
-        messagesAdapter = new MessagesListAdapter<>(myUsername, imageLoader);
+        //We can pass any data toJid ViewHolder with payload
+        CustomIncomingTextMessageViewHolder.Payload payload = new CustomIncomingTextMessageViewHolder.Payload();
+        //For example click listener
+        payload.avatarClickListener = new CustomIncomingTextMessageViewHolder.OnAvatarClickListener() {
+            @Override
+            public void onAvatarClick() {
+                Toast.makeText(ChatActivity.this,
+                        "Text message avatar clicked", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        MessageHolders holdersConfig = new MessageHolders()
+                .setIncomingTextConfig(
+                        CustomIncomingTextMessageViewHolder.class,
+                        R.layout.item_custom_incoming_text_message,
+                        payload)
+                .setOutcomingTextConfig(
+                        CustomOutcomingTextMessageViewHolder.class,
+                        R.layout.item_custom_outcoming_text_message)
+                .setIncomingImageConfig(
+                        CustomIncomingImageMessageViewHolder.class,
+                        R.layout.item_incoming_image_message)
+                .setOutcomingImageConfig(
+                        CustomOutcomingImageMessageViewHolder.class,
+                        R.layout.item_outcoming_image_message);
+
+        messagesAdapter = new MessagesListAdapter<>(myUsername, holdersConfig, imageLoader);
         messagesAdapter.enableSelectionMode(this);
         messagesAdapter.setLoadMoreListener(this);
         messagesAdapter.registerViewClickListener(R.id.messageUserAvatar,
-                new MessagesListAdapter.OnMessageViewClickListener<Message>() {
-                    @Override
-                    public void onMessageViewClick(View view, Message message) {
+                (MessagesListAdapter.OnMessageViewClickListener<Message>) (view, message) -> {
 
-                    }
                 });
         this.messagesList.setAdapter(messagesAdapter);
+
+//        List<Message> messages = mLocalRepository.getMessages();
+//        Toast.makeText(getApplicationContext(), "SIZE : " + messages.size(), Toast.LENGTH_SHORT).show();
+//        messagesAdapter.addToEnd(messages, true);
+
+        mRepository.getMessagesFirestore(myUsername, chatToUsername, new RemoteDataSource.GetMessagesCallback() {
+            @Override
+            public void onGetMessagesSuccess(List<Message> messageList) {
+//                messagesAdapter.addToEnd((List) messagesList, true);
+                for (Message message : messageList){
+                    messagesReferenceMap.put(message.getId(), message);
+                    messagesAdapter.addToStart(message, true);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -164,15 +255,32 @@ public class ChatActivity extends AppCompatActivity
     @Override
     public boolean onSubmit(CharSequence input) {
         User user = new User(myUsername, myUsername, "http://i.imgur.com/Qn9UesZ.png", true);
-        Message message = new Message(myUsername, user, input.toString());
+        Message message = new Message(new Date().toString(), user, input.toString());
+        message.setFromJid(myUsername);
+        message.setToJid(chatToUsername);
+        message.setStatus(Message.STATUS_SENT);
 
-        messagesAdapter.addToStart(message, true);
+        mRepository.insertMessageFirestore(message, new RemoteDataSource.InsertMessageCallback() {
+            @Override
+            public void onInsertMessageSuccess() {
+                // On Insert success callback
+            }
 
-        Intent sendMessageIntent = new Intent();
-        sendMessageIntent.setAction(MyService.SEND_MESSAGE);
-        sendMessageIntent.putExtra("body", input.toString());
-        sendMessageIntent.putExtra("toJid", chatToUsername);
-        EventBus.getDefault().post(sendMessageIntent);
+            @Override
+            public void onIdGenerated(String id) {
+                message.setId(id);
+                mLocalRepository.insertMessage(message);
+                messagesReferenceMap.put(message.getId(), message);
+                messagesAdapter.addToStart(message, true);
+
+                Intent sendMessageIntent = new Intent();
+                sendMessageIntent.setAction(MyService.SEND_MESSAGE);
+                sendMessageIntent.putExtra("body", message);
+                sendMessageIntent.putExtra("toJid", chatToUsername);
+                EventBus.getDefault().post(sendMessageIntent);
+            }
+        });
+
         return true;
     }
 
@@ -196,21 +304,12 @@ public class ChatActivity extends AppCompatActivity
         EventBus.getDefault().post(sendOnStopTyping);
     }
 
-    protected void loadMessages() {
-        //imitation of internet connection
-        new Handler().postDelayed(() -> {
-//            ArrayList<Message> messages = MessagesFixtures.getMessages(lastLoadedDate);
-//            lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
-//            messagesAdapter.addToEnd(messages, false);
-        }, 1000);
-    }
-
     @Override
     public void onLoadMore(int page, int totalItemsCount) {
 //        Log.i("TAG", "onLoadMore: " + page + " " + totalItemsCount);
-        if (totalItemsCount < TOTAL_MESSAGES_COUNT) {
-            loadMessages();
-        }
+//        if (totalItemsCount < TOTAL_MESSAGES_COUNT) {
+//            loadMessages();
+//        }
     }
 
     @Override
@@ -220,10 +319,6 @@ public class ChatActivity extends AppCompatActivity
 //        menu.findItem(R.id.action_copy).setVisible(count > 0);
     }
 }
-
-
-
-
 
 
 //        AccountManager accountManager = AccountManager.getInstance(mConnection);

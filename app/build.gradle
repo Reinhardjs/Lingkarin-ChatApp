@@ -22,14 +22,14 @@ android {
 //            buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
 //            buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
 
-            buildConfigField "String", "XMPP_DOMAIN", "\"192.168.0.102\""
+            buildConfigField "String", "XMPP_DOMAIN", "\"xmpp-dev.lingkarin.com\""
             buildConfigField "int", "XMPP_PORT", "5222"
             buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
             buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
         }
 
         debug {
-            buildConfigField "String", "XMPP_DOMAIN", "\"192.168.0.102\""
+            buildConfigField "String", "XMPP_DOMAIN", "\"xmpp-dev.lingkarin.com\""
             buildConfigField "int", "XMPP_PORT", "5222"
             buildConfigField "String", "XMPP_RESOURCE", "\"Android\""
             buildConfigField "String", "GROUP_ID", "\"HXVl6G1FnppP9kuolSjs\""
@@ -100,19 +100,29 @@ dependencies {
     // Architecture Components
     implementation "android.arch.lifecycle:extensions:$archComponentVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$archComponentVersion"
+
+    // Room Persistence Library
+    implementation "android.arch.persistence.room:rxjava2:$archComponentVersion"
     implementation "android.arch.persistence.room:runtime:$archComponentVersion"
     annotationProcessor "android.arch.persistence.room:compiler:$archComponentVersion"
 
+    // Life Cycle Observer
+    implementation "android.arch.lifecycle:extensions:$archComponentVersion"
+
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.8'
+//    implementation 'com.google.firebase:firebase-core:16.0.8'
+    implementation "com.google.firebase:firebase-core:$firebaseCoreVersion"
+    implementation "com.google.firebase:firebase-auth:$firebaseAuthVersion"
+    implementation "com.google.firebase:firebase-firestore:$firebaseFirestoreVersion"
+    implementation "com.google.firebase:firebase-storage:$firebaseStorageVersion"
+    implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
+    implementation "com.google.firebase:firebase-functions:$firebaseFunctionsVersion"
+    implementation "com.firebaseui:firebase-ui:$firebaseUIVersion"
 
     // Rx java & Reactive Network
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'
-
-    // Life Cycle Observer
-    implementation 'android.arch.lifecycle:extensions:1.1.1'
 
     // ChatKit
     implementation 'com.github.stfalcon:chatkit:0.3.3'
@@ -128,6 +138,7 @@ dependencies {
 //    implementation "de.hdodenhof:circleimageview:$circleImageViewVersion"
 //    implementation "com.github.siyamed:android-shape-imageview:$shapeImageViewVersion"
 
+    // hello
 }
 
 configurations {

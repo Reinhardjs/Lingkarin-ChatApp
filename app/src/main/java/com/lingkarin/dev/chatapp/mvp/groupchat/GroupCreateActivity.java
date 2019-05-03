@@ -122,7 +122,7 @@ public class GroupCreateActivity extends AppCompatActivity {
     InvitationListener invitationListener = new InvitationListener() {
         @Override
         public void invitationReceived(XMPPConnection conn, MultiUserChat room, EntityJid inviter, String reason, String password, Message message, MUCUser.Invite invitation) {
-            Log.d("GROUPACTIVITY", "InvitationListener(invitationReceived): from:" + inviter.asEntityBareJidString()
+            Log.d("GROUPACTIVITY", "InvitationListener(invitationReceived): fromJid:" + inviter.asEntityBareJidString()
                     + ", room:" + room.getSubject() + ", reason:" + reason + ", password:" + password
                     + ", message:" + message.toString());
         }
@@ -137,7 +137,7 @@ public class GroupCreateActivity extends AppCompatActivity {
             MultiUserChat mMultiUserChat = MultiUserChatManager.getInstanceFor(mConnection).getMultiUserChat(jid);
 
             EntityBareJid toJID = JidCreate.entityBareFrom(usernameET.getText().toString() + "@" + Config.XMPP_DOMAIN);
-            mMultiUserChat.invite(toJID, "Hello, i invited you to join the group chat :)");
+            mMultiUserChat.invite(toJID, "Hello, i invited you toJid join the group chat :)");
 
             Log.d("GROUPACTIVITY", "Invited");
         } catch (XmppStringprepException | SmackException.NotConnectedException | InterruptedException e) {

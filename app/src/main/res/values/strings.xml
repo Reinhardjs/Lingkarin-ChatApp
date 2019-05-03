@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">ChatApp</string>
-    <string name="button_open_chatlist">Connect And Login</string>
+    <string name="button_open_chatlist">Start Chat</string>
 </resources>

@@ -24,22 +24,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/username"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Username"/>
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password"/>
-
-        <EditText
             android:id="@+id/chatTo"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
@@ -74,6 +58,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_15dp"
             android:text="MUC"/>
+
+        <!--<EditText-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"/>-->
+
+        <Button
+            android:id="@+id/broadcast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_15dp"
+            android:text="Broadcast to"/>
 
     </LinearLayout>
 

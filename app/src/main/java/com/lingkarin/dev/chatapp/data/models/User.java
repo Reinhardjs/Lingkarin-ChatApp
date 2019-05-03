@@ -2,7 +2,9 @@ package com.lingkarin.dev.chatapp.data.models;
 
 import com.stfalcon.chatkit.commons.models.IUser;
 
-public class User implements IUser {
+import java.io.Serializable;
+
+public class User implements Serializable, IUser {
 
     private String id;
     private String name;
@@ -14,6 +16,10 @@ public class User implements IUser {
         this.name = name;
         this.avatar = avatar;
         this.online = online;
+    }
+
+    public User(){
+
     }
 
     @Override

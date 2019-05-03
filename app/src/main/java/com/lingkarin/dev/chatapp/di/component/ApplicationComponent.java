@@ -1,5 +1,7 @@
 package com.lingkarin.dev.chatapp.di.component;
 
+import android.content.Context;
+
 import com.lingkarin.dev.chatapp.di.module.ApplicationModule;
 import com.lingkarin.dev.chatapp.di.module.AuthModule;
 import com.lingkarin.dev.chatapp.ChatApplication;
@@ -16,6 +18,8 @@ public interface ApplicationComponent {
 
 
     AuthComponent newAuthComponent(AuthModule authModule);
+
+    Context getContext();
 
     void inject(ChatApplication chatApplication);
     void inject(ChatActivity chatActivity);

@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.lingkarin.dev.chatapp">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.NETWORK" />
 
     <application
@@ -17,7 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".mvp.main.MainActivity">
+        <activity android:name=".mvp.main.MainActivity" />
+        <activity
+            android:name=".mvp.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,14 +35,15 @@
         <activity android:name=".mvp.chatlist.ChatListActivity" />
         <activity
             android:name=".mvp.chat.ChatActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".mvp.LoginActivity"/>
 
         <service
             android:name=".xmpp.XMPPManagementService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".services.MyService"
+            android:name=".services.service.MyService"
             android:enabled="true"
             android:exported="false" />
 
@@ -55,6 +59,15 @@
         <activity
             android:name=".mvp.groupchat.GroupCreateActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <service
+            android:name=".services.service.FakeService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.service.LiveAppService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

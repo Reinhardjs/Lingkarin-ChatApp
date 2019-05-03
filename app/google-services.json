@@ -1,34 +1,103 @@
 {
   "project_info": {
-    "project_number": "411152256683",
-    "firebase_url": "https://lingkaran-chat-app.firebaseio.com",
-    "project_id": "lingkaran-chat-app",
-    "storage_bucket": "lingkaran-chat-app.appspot.com"
+    "project_number": "987196417566",
+    "firebase_url": "https://lingkarin-id-dev.firebaseio.com",
+    "project_id": "lingkarin-id-dev",
+    "storage_bucket": "lingkarin-id-dev.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:411152256683:android:089ed3ea33dd8cf4",
+        "mobilesdk_app_id": "1:987196417566:android:07d268de57801ec9",
         "android_client_info": {
-          "package_name": "com.lingkarin.dev.chatapp"
+          "package_name": "com.lingkarin.dev"
         }
       },
       "oauth_client": [
         {
-          "client_id": "411152256683-jqs3vs56v3adpqtk0v6jui3hm3r6cdts.apps.googleusercontent.com",
+          "client_id": "987196417566-iqmjn85s4cabli9ivobp6lo86o2amht3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lingkarin.dev",
+            "certificate_hash": "ac2e4f179571c53e0fd546c96475a68b51c800f9"
+          }
+        },
+        {
+          "client_id": "987196417566-vluve1prm6ag5sdp41evjv6gknrpkq0d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lingkarin.dev",
+            "certificate_hash": "976ca578ab38805ed02cd2138121296ea0ec7ef2"
+          }
+        },
+        {
+          "client_id": "987196417566-7pf22ouckdjt3nvv0t0m0be385a84itm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lingkarin.dev",
+            "certificate_hash": "e27cb72d870533328e853ea1f012c32e5bf242ac"
+          }
+        },
+        {
+          "client_id": "987196417566-k62r03glsgh48gbm6sq9cmn76mko7qmf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lingkarin.dev",
+            "certificate_hash": "a61f205eac007264f3a9bf47592c61d09f644dc3"
+          }
+        },
+        {
+          "client_id": "987196417566-ja2temiejaos5tp1s9uvu9apq866jvo8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBdjC_ZbOa2Hd-4rvf1D_cjZFW4IDlcb1s"
+          "current_key": "AIzaSyDNl-of2NxhSLxA3erOmt3ns4jHKe_KcdE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "411152256683-jqs3vs56v3adpqtk0v6jui3hm3r6cdts.apps.googleusercontent.com",
+              "client_id": "987196417566-ja2temiejaos5tp1s9uvu9apq866jvo8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:987196417566:android:089ed3ea33dd8cf4",
+        "android_client_info": {
+          "package_name": "com.lingkarin.dev.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "987196417566-fhrul2ja8c87oquha7mmppu1httj70mf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lingkarin.dev.chatapp",
+            "certificate_hash": "038aa44f1b0eddb6c7d44bcce32832dbf6aa94a9"
+          }
+        },
+        {
+          "client_id": "987196417566-ja2temiejaos5tp1s9uvu9apq866jvo8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNl-of2NxhSLxA3erOmt3ns4jHKe_KcdE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "987196417566-ja2temiejaos5tp1s9uvu9apq866jvo8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
